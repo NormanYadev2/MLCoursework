@@ -27,7 +27,7 @@ data[numeric_cols] = data[numeric_cols].replace([np.inf, -np.inf], np.nan)
 data[numeric_cols] = data[numeric_cols].fillna(0)  # Replace NaNs with 0
 
 scaler = StandardScaler()
-data[numeric_cols] = scaler.fit_transform(data[numeric_cols]) #normalize the data so mean will be 0 and sd will be 1
+data[numeric_cols] = scaler.fit_transform(data[numeric_cols]) # normalize the data so mean will be 0 and sd will be 1
 
 # Apply PCA for dimensionality reduction
 pca = PCA(n_components=0.95)  # Retain 95% variance
