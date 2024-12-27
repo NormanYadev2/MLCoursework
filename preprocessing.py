@@ -14,16 +14,17 @@ print(data.isnull().sum())
 
 # Label encode binary columns
 binary_cols = ['default', 'housing', 'loan', 'y']
-le = LabelEncoder()   #Transforms these binary columns to numerical data
+le = LabelEncoder()   # Transforms these binary columns to numerical data
 for col in binary_cols:
     data[col] = le.fit_transform(data[col])
 
 # One-hot encode categorical columns
-data = pd.get_dummies(data, columns=['job', 'marital', 'education', 'contact', 'month', 'poutcome']) #Convert category variable to binary columns
+data = pd.get_dummies(data, columns=['job', 'marital', 'education', 'contact', 'month', 'poutcome'])
 data = data.astype(int)
 
+
+
 # Save the preprocessed data
-preprocessed_file_path = "C:\\Users\\Muralish\\Desktop\\Machine lerning coursework\\Data\\bank\\preprocessed_bankdata\\\\bank-full\\bank_preprocessed.csv"
+preprocessed_file_path = "C:\\Users\\Muralish\\Desktop\\Machine lerning coursework\\Data\\bank\\preprocessed_bankdata\\bank-full\\bank_preprocessed3.csv"
 data.to_csv(preprocessed_file_path, index=False)
 print(f"Preprocessed data saved to {preprocessed_file_path}")
-
