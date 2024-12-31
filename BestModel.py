@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -22,7 +21,8 @@ data['pdays'] = data['pdays'].fillna(data['pdays'].mean())
 
 numeric_cols = ['age', 'pdays', 'previous', 'balance', 'campaign', 'day']
 
-# Scaling numeric features
+
+# Scale numeric features
 scaler = StandardScaler()
 data[numeric_cols] = scaler.fit_transform(data[numeric_cols])
 
@@ -50,14 +50,14 @@ print(f"Explained Variance Ratio: {pca.explained_variance_ratio_}")
 X = final_data.drop(columns=['y'])
 y = final_data['y']
 
-# Split the data into train, validation, and test sets[70% for training and 15 % for each validation and test data]
+# Splitting the data into train, validation, and test sets
 X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
 X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42, stratify=y_temp)
 
 # --- Hyperparameter Tuning for Random Forest ---
 rf_model = RandomForestClassifier(random_state=42)
 
-# Defining parameter grid for RandomizedSearchCV
+# Define parameter grid for RandomizedSearchCV
 param_grid_rf = {
     'n_estimators': [100, 200, 500, 1000],
     'max_depth': [None, 10, 20, 30, 40, 50],
@@ -67,12 +67,12 @@ param_grid_rf = {
     'max_samples': [0.8, 0.9, 1.0],
     'bootstrap': [True],
     'oob_score': [True, False],
-    'class_weight': ['balanced'],
-    'warm_start': [True, False]
-
+    'class_weight': [None, 'balanced'],
+    'warm_start': [True, False],
+    'random_state': [42]
 }
 
-# Performing RandomizedSearchCV
+# Performing RandomizedSearchCV (performs hyperparameter tuning)
 rf_random_search = RandomizedSearchCV(estimator=rf_model, param_distributions=param_grid_rf, n_iter=10, cv=3, random_state=42, verbose=2, n_jobs=-1)
 rf_random_search.fit(X_train, y_train)
 
@@ -83,7 +83,7 @@ best_rf_model = rf_random_search.best_estimator_
 y_pred_rf_train_prob = best_rf_model.predict_proba(X_train)[:, 1]
 y_pred_rf_test_prob = best_rf_model.predict_proba(X_test)[:, 1]
 
-# Applying thresholding
+# Applying thresholding for class imbalance
 threshold = 0.3  # Adjust this threshold based on desired precision/recall tradeoff
 y_pred_rf_train = (y_pred_rf_train_prob >= threshold).astype(int)
 y_pred_rf_test = (y_pred_rf_test_prob >= threshold).astype(int)
@@ -121,7 +121,7 @@ early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_wei
 
 nn_model.fit(X_train, y_train, epochs=75, batch_size=32, verbose=1, validation_data=(X_val, y_val), callbacks=[early_stopping])
 
-# Predicting the probabilities for the training and test sets
+# Predicting probabilities for the training and test sets
 y_pred_nn_train_prob = nn_model.predict(X_train)
 y_pred_nn_test_prob = nn_model.predict(X_test)
 
