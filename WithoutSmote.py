@@ -11,7 +11,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import RandomizedSearchCV
 
 
-# Loading the preprocessed data
+# Load the preprocessed data
 preprocessed_file_path = "C:\\Users\\Muralish\\Desktop\\Machine lerning coursework\\Data\\bank\\preprocessed_bankdata\\bank-full\\bank_preprocessed1.csv"
 data = pd.read_csv(preprocessed_file_path)
 
