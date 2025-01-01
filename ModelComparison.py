@@ -5,6 +5,9 @@ from sklearn.metrics import classification_report
 
 from prettytable import PrettyTable
 
+from WithoutSmote import accuracy_rf_train, accuracy_rf_test, roc_auc_rf_test, roc_auc_nn_test, accuracy_nn_test, \
+    accuracy_nn_train, y_pred_nn_test, y_pred_rf_test, y_test
+
 # Create a table to display metrics
 table = PrettyTable()
 table.field_names = ["Metric", "Random Forest", "Neural Network"]
