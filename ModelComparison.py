@@ -1,12 +1,13 @@
 # Compare results of Random Forest and Neural Network models
-
+import matplotlib.pyplot as plt
+from sklearn.metrics import roc_curve
 from prettytable import PrettyTable
 from sklearn.metrics import classification_report
 
 from prettytable import PrettyTable
 
 from WithoutSmote import accuracy_rf_train, accuracy_rf_test, roc_auc_rf_test, roc_auc_nn_test, accuracy_nn_test, \
-    accuracy_nn_train, y_pred_nn_test, y_pred_rf_test, y_test
+    accuracy_nn_train, y_pred_nn_test, y_pred_rf_test, y_test, y_pred_rf_test_prob, y_pred_nn_test_prob
 
 # Create a table to display metrics
 table = PrettyTable()
@@ -59,3 +60,20 @@ table_2.add_row([
 print("\n--- Precision, Recall, F1-Score Comparison Table ---")
 print(table_2)
 
+
+# Plot ROC Curve for Random Forest
+fpr_rf, tpr_rf, _ = roc_curve(y_test, y_pred_rf_test_prob)
+plt.plot(fpr_rf, tpr_rf, label=f"Random Forest (AUC = {roc_auc_rf_test:.2f})")
+
+# Plot ROC Curve for Neural Network
+fpr_nn, tpr_nn, _ = roc_curve(y_test, y_pred_nn_test_prob)
+plt.plot(fpr_nn, tpr_nn, label=f"Neural Network (AUC = {roc_auc_nn_test:.2f})")
+
+# Add plot details
+plt.plot([0, 1], [0, 1], 'k--', label="Random Guess")  # Random guess line
+plt.title("ROC Curve Comparison")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.legend(loc="lower right")
+plt.grid()
+plt.show()
