@@ -1,4 +1,6 @@
+import matplotlib.pyplot as plt
 from prettytable import PrettyTable
+from sklearn.metrics import roc_curve, auc
 
 # Results for Random Forest
 rf_results = {
@@ -25,6 +27,15 @@ nn_classification_report = {
     "f1-score": [0.94, 0.93]
 }
 nn_confusion_matrix = [[7806,179], [846, 7138]]
+
+# ROC curve data (example values for illustration; replace with actual predictions and labels)
+rf_fpr = [0.0, 0.1, 0.2, 1.0]
+rf_tpr = [0.0, 0.8, 0.9, 1.0]
+rf_auc = rf_results["Test ROC AUC"]
+
+nn_fpr = [0.0, 0.05, 0.15, 1.0]
+nn_tpr = [0.0, 0.85, 0.92, 1.0]
+nn_auc = nn_results["Test ROC AUC"]
 
 # Table 1: Accuracy and ROC AUC
 accuracy_table = PrettyTable()
@@ -63,3 +74,15 @@ nn_cm_table.field_names = ["", "Predicted 0", "Predicted 1"]
 nn_cm_table.add_row(["Actual 0", nn_confusion_matrix[0][0], nn_confusion_matrix[0][1]])
 nn_cm_table.add_row(["Actual 1", nn_confusion_matrix[1][0], nn_confusion_matrix[1][1]])
 print(nn_cm_table)
+
+# Plot ROC Curves
+plt.figure(figsize=(8, 6))
+plt.plot(rf_fpr, rf_tpr, label=f"Random Forest (AUC = {rf_auc})", color='blue')
+plt.plot(nn_fpr, nn_tpr, label=f"Neural Network (AUC = {nn_auc})", color='green')
+plt.plot([0, 1], [0, 1], 'k--', label="Random Classifier (AUC = 0.50)")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.title("ROC Curve Comparison")
+plt.legend(loc="lower right")
+plt.grid()
+plt.show()
