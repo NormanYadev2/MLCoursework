@@ -27,8 +27,11 @@ data = data.drop(columns=['duration'])
 # Create the 'was_contacted' column [0 means not contacted, 1 means contacted]
 data['was_contacted'] = (data['pdays'] != -1).astype(int)
 
-# Step 2: Replace -1 in 'pdays' with NaN
+# Replace -1 in 'pdays' with NaN
 data['pdays'] = data['pdays'].replace(-1, np.nan)
+
+# Change NaN values to mean for normalization
+data['pdays'] = data['pdays'].fillna(data['pdays'].mean())
 
 # Remove outlier from previous column manually
 data = data[data['previous'] != 275]
